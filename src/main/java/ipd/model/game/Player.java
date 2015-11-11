@@ -11,7 +11,7 @@ public class Player {
 		return payOff;
 	}
 
-	public void addPayOff(int payOff) {
+	public void addPayOff(double payOff) {
 		this.payOff += payOff;
 	}
 

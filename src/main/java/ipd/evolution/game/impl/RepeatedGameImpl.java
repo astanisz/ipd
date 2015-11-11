@@ -14,10 +14,13 @@ public class RepeatedGameImpl implements RepeatedGame {
 	public void play(Pair<Player, Player> players) {
 		Player player1 = players.getLeft();
 		Player player2 = players.getRight();
+		double discountFactor = 1.0; // delta ** i
 
 		do {
 			// first round is always played
-			playRound(player1, player2);
+			playRound(player1, player2, discountFactor);
+			// decreasing discountFactor so that later rounds are becoming less important for total payOff
+			discountFactor *= nextRoundProbability;
 			// next round is played with nextRoundProbability
 		} while (ProbabilityUtils.simulateProbability(nextRoundProbability));
 
@@ -32,11 +35,11 @@ public class RepeatedGameImpl implements RepeatedGame {
 		player.setPayoff(player.getPayOff() * (1 - nextRoundProbability));
 	}
 
-	private void playRound(Player player1, Player player2) {
+	private void playRound(Player player1, Player player2, double discountFactor) {
 		Action action1 = player1.getStrategy().getCurrentState().getAction();
 		Action action2 = player2.getStrategy().getCurrentState().getAction();
 
-		Game game = new GameImpl();
+		Game game = new GameImpl(discountFactor);
 		game.play(Pair.of(player1, player2), Pair.of(action1, action2));
 
 		player1.getStrategy().goToNextState(action2);
