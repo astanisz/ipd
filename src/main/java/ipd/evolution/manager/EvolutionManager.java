@@ -15,12 +15,26 @@ import com.google.common.collect.Lists;
 
 public class EvolutionManager {
 
-	private List<Player> players;
-	private RepeatedGameImpl game = new RepeatedGameImpl();
-	private Crossover crossover = new CrossoverImpl();
-	private Mutation mutation = new MutationImpl();
+	private static List<Player> players;
+	private static RepeatedGameImpl game = new RepeatedGameImpl();
+	private static Crossover crossover = new CrossoverImpl();
+	private static Mutation mutation = new MutationImpl();
 
-	public void Step() {
+	public static void main(String[] args) {
+		setUp();
+		for (int i = 0; i < 10; i++) {
+			System.out.println("Step: " + i);
+			step();
+			System.out.println("Payoffs: ");
+			players.forEach(p -> System.out.println("Player " + players.indexOf(p) + " " + p.getPayOff()));
+		}
+	}
+
+	public static void setUp() {
+		players = ExeplaryPopulationFactory.create(2);
+	}
+
+	public static void step() {
 		List<Pair<Player, Player>> matchedPlayers = matchPlayers();
 		// play repeated game
 		matchedPlayers.forEach(pair -> game.play(pair));
@@ -28,11 +42,7 @@ public class EvolutionManager {
 		mutation.mutate(players);
 	}
 
-	public void setUp() {
-		// TODO:
-	}
-
-	private List<Pair<Player, Player>> matchPlayers() {
+	private static List<Pair<Player, Player>> matchPlayers() {
 		List<Pair<Player, Player>> matchedPlayers = Lists.newLinkedList();
 		for (int i = 0; i < players.size() - 1; i += 2) {
 			matchedPlayers.add(Pair.of(players.get(i), players.get(i + 1)));
