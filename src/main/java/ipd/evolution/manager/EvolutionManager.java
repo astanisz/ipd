@@ -31,7 +31,7 @@ public class EvolutionManager {
 	}
 
 	public static void setUp() {
-		players = ExeplaryPopulationFactory.create(2);
+		players = ExemplaryPopulationFactory.create(2);
 	}
 
 	public static void step() {

@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class ExeplaryPopulationFactory {
+public class ExemplaryPopulationFactory {
 
 	public static List<Player> create(int size) {
 		List<Player> players = Lists.newLinkedList();
