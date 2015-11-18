@@ -74,12 +74,13 @@ public class MutationImpl implements Mutation {
 	// 3. Pointing all transitions leading to mutatedState to newState
 	// 4. Removing mutatedState
 	// 5. Adding newState to states
-	// 6. Setting transitions for newState
 	private void changeLabel(Player player) {
 		// NOTE: This mutatedState will be removed
 		State mutatedState = pickStateAtRandom(player);
 
 		State newState = mutatedState.getAction() == Action.COOPERATION ? new Defection() : new Cooperation();
+		newState.setNextIfCooperation(mutatedState.getNextIfCooperation());
+		newState.setNextIfDefection(mutatedState.getNextIfDefection());
 
 		for (State state: player.getStrategy().getStates()) {
 			relinkTransition(state, mutatedState, newState);
@@ -88,8 +89,6 @@ public class MutationImpl implements Mutation {
 		player.getStrategy().removeState(mutatedState);
 
 		player.getStrategy().addState(newState);
-
-		createTransitions(player, newState);
 	}
 
 	// Deleting state:
