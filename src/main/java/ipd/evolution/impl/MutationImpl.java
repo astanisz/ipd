@@ -44,8 +44,7 @@ public class MutationImpl implements Mutation {
 	// 1. Choosing state which will be mutated and connected with newly created state
 	// 2. State is created and added to the list of available states
 	// 3. Newly created state is connected with mutatedState by randomly chosen transition
-	// 4. For newly created state we need to figure out what happens in case of Cooperation and Defection.
-	//    We deal with it by choosing state destination states randomly
+	// 4. Setting transitions for newState
 	private void addState(Player player) {
 		State mutatedState = pickStateAtRandom(player);
 
@@ -54,16 +53,13 @@ public class MutationImpl implements Mutation {
 
 		makeTransition(pickTransitionAtRandom(), mutatedState, newState);
 
-		State goToOnCooperation = pickStateAtRandom(player);
-		State goToOnDefection = pickStateAtRandom(player);
-		newState.setNextIfCooperation(goToOnCooperation);
-		newState.setNextIfDefection(goToOnDefection);
+		createTransitions(player, newState);
 	}
 
 	// Changing transition:
 	// 1. Choosing state to be changed
 	// 2. Choosing new destination state for the transition (it could be possibly the same one ?)
-	// 3. Moving selected transition from mutatedState to destinationState
+	// 3. Changing selected transition from mutatedState to destinationState
 	private void changeTransition(Player player) {
 		State mutatedState = pickStateAtRandom(player);
 
@@ -77,6 +73,8 @@ public class MutationImpl implements Mutation {
 	// 2. Creating new state with opposite label (action)
 	// 3. Pointing all transitions leading to mutatedState to newState
 	// 4. Removing mutatedState
+	// 5. Adding newState to states
+	// 6. Setting transitions for newState
 	private void changeLabel(Player player) {
 		// NOTE: This mutatedState will be removed
 		State mutatedState = pickStateAtRandom(player);
@@ -88,10 +86,14 @@ public class MutationImpl implements Mutation {
 		}
 
 		player.getStrategy().removeState(mutatedState);
+
+		player.getStrategy().addState(newState);
+
+		createTransitions(player, newState);
 	}
 
 	// Deleting state:
-	// 0. Make no sense to delete state when there is at most one state :)
+	// 0. Makes no sense to delete state when there is at most one state :)
 	// 1. Choosing state we want to delete
 	// 2. Pointing all transitions leading to deletedState to state from which their originated !
 	// 3. Removing state from list of states
@@ -108,7 +110,6 @@ public class MutationImpl implements Mutation {
 	}
 
 	//// Additional private convenience methods....
-
 
 	// All links/transitions leading to fromState are moved to toState
 	// currentState is currently visited state
@@ -128,6 +129,15 @@ public class MutationImpl implements Mutation {
 		} else {
 			fromState.setNextIfDefection(toState);
 		}
+	}
+
+	// Randomly initializes transitions for player and state
+	// This is used when adding new state
+	private void createTransitions(Player player, State state) {
+		State goToOnCooperation = pickStateAtRandom(player);
+		State goToOnDefection = pickStateAtRandom(player);
+		state.setNextIfCooperation(goToOnCooperation);
+		state.setNextIfDefection(goToOnDefection);
 	}
 
 	// Picks transition - COOPERATION is picked with cooperationTransitionPickedProbability probability
