@@ -10,4 +10,13 @@ public class Cooperation extends State {
 		return Action.COOPERATION;
 	}
 
+	@Override
+	public Color getColor() {
+		return Color.BLUE;
+	}
+
+	@Override
+	public State getCopy() {
+		return new Cooperation();
+	}
 }

@@ -2,6 +2,7 @@ package ipd.evolution.game.impl;
 
 import ipd.evolution.game.Game;
 import ipd.evolution.game.RepeatedGame;
+import ipd.evolution.manager.EvolutionManager;
 import ipd.model.game.Action;
 import ipd.model.game.Player;
 import ipd.utils.ProbabilityUtils;
@@ -9,7 +10,6 @@ import ipd.utils.ProbabilityUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RepeatedGameImpl implements RepeatedGame {
-	private static final double nextRoundProbability = 0.9;
 
 	public void play(Pair<Player, Player> players) {
 		Player player1 = players.getLeft();
@@ -20,9 +20,9 @@ public class RepeatedGameImpl implements RepeatedGame {
 			// first round is always played
 			playRound(player1, player2, discountFactor);
 			// decreasing discountFactor so that later rounds are becoming less important for total payOff
-			discountFactor *= nextRoundProbability;
+			discountFactor *= EvolutionManager.DELTA;
 			// next round is played with nextRoundProbability
-		} while (ProbabilityUtils.simulateProbability(nextRoundProbability));
+		} while (ProbabilityUtils.simulateProbability(EvolutionManager.DELTA));
 
 		normalizePayoff(player1);
 		normalizePayoff(player2);
@@ -32,7 +32,7 @@ public class RepeatedGameImpl implements RepeatedGame {
 	 * For repeated game payoffs are normalized.
 	 */
 	private void normalizePayoff(Player player) {
-		player.setPayoff(player.getPayOff() * (1 - nextRoundProbability));
+		player.setPayoff(player.getPayOff() * (1 - EvolutionManager.DELTA));
 	}
 
 	private void playRound(Player player1, Player player2, double discountFactor) {

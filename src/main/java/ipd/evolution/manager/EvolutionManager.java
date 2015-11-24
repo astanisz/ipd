@@ -4,9 +4,13 @@ import ipd.evolution.Crossover;
 import ipd.evolution.Mutation;
 import ipd.evolution.game.impl.RepeatedGameImpl;
 import ipd.evolution.impl.CrossoverImpl;
-import ipd.evolution.impl.MutationImpl;
+import ipd.evolution.impl.MutationFromPaper;
+import ipd.model.game.Action;
 import ipd.model.game.Player;
+import ipd.model.strategy.State;
+import ipd.visualization.GraphPlotter;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,20 +22,34 @@ public class EvolutionManager {
 	private static List<Player> players;
 	private static RepeatedGameImpl game = new RepeatedGameImpl();
 	private static Crossover crossover = new CrossoverImpl();
-	private static Mutation mutation = new MutationImpl();
+	private static Mutation mutation = new MutationFromPaper();
+	public static double ALFA = 0.2;
+	public static double DELTA = 0.3;
 
 	public static void main(String[] args) {
-		setUp();
-		for (int i = 0; i < 10; i++) {
-			System.out.println("Step: " + i);
-			step();
-			System.out.println("Payoffs: ");
-			players.forEach(p -> System.out.println("Player " + players.indexOf(p) + " " + p.getPayOff()));
+
+		if (args.length < 3) {
+			System.out.println("Too few arguments. Parameters: alfa_probability delta_probability iterations");
+			return;
 		}
+
+		setUp(args);
+
+		int iterations = Integer.parseInt(args[2]);
+		for (int i = 0; i < iterations; i++) {
+			step();
+			// printAveragePayOffSum(i);
+			printPercentageOfCooperations();
+		}
+		saveTheBestStrategy();
+		// players.forEach(p -> GraphPlotter.plot(p.getStrategy(), players.indexOf(p)));
+
 	}
 
-	public static void setUp() {
-		players = ExemplaryPopulationFactory.create(2);
+	public static void setUp(String[] args) {
+		ALFA = Double.parseDouble(args[0]);
+		DELTA = Double.parseDouble(args[1]);
+		players = ExemplaryPopulationFactory.create(1000);
 	}
 
 	public static void step() {
@@ -49,4 +67,36 @@ public class EvolutionManager {
 		}
 		return matchedPlayers;
 	}
+
+	private static void printPercentageOfCooperations() {
+		long cooperationSum = 0;
+		int statesNumber = 0;
+		for (Player p : players) {
+			List<State> states = p.getStrategy().getStates();
+			statesNumber += states.size();
+			cooperationSum = states.stream().filter(s -> s.getAction().equals(Action.COOPERATION)).count();
+		}
+		System.out.println(cooperationSum * 100.0 / statesNumber);
+	}
+
+	private static void printAveragePayOffSum(int i) {
+		double sum = players.stream().mapToDouble(p -> p.getPayOff()).sum();
+		System.out.println(i + " " + sum / 200);
+	}
+
+	private static void saveTheBestStrategy() {
+		Player theBestPlayer = players.get(0);
+		for (Player p : players)
+			if (p.getPayOff() > theBestPlayer.getPayOff())
+				theBestPlayer = p;
+		GraphPlotter.plot(theBestPlayer.getStrategy(), getCurrentDate());
+	}
+
+	private static String getCurrentDate() {
+		String date = new Date().toString();
+		date = date.replaceAll(":", "-");
+		date = date.trim();
+		return date;
+	}
+
 }

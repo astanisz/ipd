@@ -6,6 +6,7 @@ import ipd.model.strategy.Strategy;
 import ipd.model.strategy.impl.Cooperation;
 import ipd.model.strategy.impl.Defection;
 import ipd.model.strategy.impl.StrategyImpl;
+import ipd.utils.ProbabilityUtils;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ExemplaryPopulationFactory {
 	private static Strategy createStrategy(int i) {
 		Strategy strategy = new StrategyImpl();
 		State state = null;
-		if (i % 2 == 0)
+		if (ProbabilityUtils.simulateProbability(0.5))
 			state = new Defection();
 		else
 			state = new Cooperation();

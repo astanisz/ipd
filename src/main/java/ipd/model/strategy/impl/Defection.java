@@ -10,4 +10,14 @@ public class Defection extends State {
 		return Action.DEFECTION;
 	}
 
+	@Override
+	public Color getColor() {
+		return Color.RED;
+	}
+
+	@Override
+	public State getCopy() {
+		return new Defection();
+	}
+
 }

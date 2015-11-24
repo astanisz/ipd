@@ -17,4 +17,6 @@ public interface Strategy {
 	void goToNextState(Action action);
 
 	State getCurrentState();
+
+	Strategy getCopy();
 }

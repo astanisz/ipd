@@ -26,4 +26,8 @@ public class Player {
 	public void setPayoff(double payOff) {
 		this.payOff = payOff;
 	}
+
+	public Strategy getStrategyCopy() {
+		return strategy.getCopy();
+	}
 }
