@@ -70,11 +70,11 @@ public class EvolutionManager {
 
 	private static void printPercentageOfCooperations() {
 		long cooperationSum = 0;
-		int statesNumber = 0;
+		long statesNumber = 0;
 		for (Player p : players) {
 			List<State> states = p.getStrategy().getStates();
 			statesNumber += states.size();
-			cooperationSum = states.stream().filter(s -> s.getAction().equals(Action.COOPERATION)).count();
+			cooperationSum += states.stream().filter(s -> s.getAction().equals(Action.COOPERATION)).count();
 		}
 		System.out.println(cooperationSum * 100.0 / statesNumber);
 	}

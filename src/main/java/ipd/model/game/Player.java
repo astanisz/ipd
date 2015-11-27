@@ -5,6 +5,9 @@ import ipd.model.strategy.Strategy;
 public class Player {
 
 	private double payOff = 0.0;
+
+	private double probability = 0.0;
+
 	private Strategy strategy;
 
 	public double getPayOff() {
@@ -14,6 +17,10 @@ public class Player {
 	public void addPayOff(double payOff) {
 		this.payOff += payOff;
 	}
+
+	public double getProbability() { return probability; }
+
+	public void setProbability(double probability) { this.probability = probability; }
 
 	public Strategy getStrategy() {
 		return strategy;
