@@ -16,12 +16,12 @@ public class CrossoverImpl implements Crossover {
 
 		// Computing sum of payoffs in parent population
 		double payoffsSum = 0.0;
-		for (Player player: parentPopulation) {
+		for (Player player : parentPopulation) {
 			payoffsSum += player.getPayOff();
 		}
 
 		// For every parent computing the probability that this parent is chosen
-		for (Player player: parentPopulation) {
+		for (Player player : parentPopulation) {
 			player.setProbability(player.getPayOff() / payoffsSum);
 		}
 
@@ -41,6 +41,7 @@ public class CrossoverImpl implements Crossover {
 	private Player getCopyOf(Player player) {
 		Player copy = new Player();
 		copy.setStrategy(player.getStrategyCopy());
+		copy.setPayoff(player.getPayOff());
 		return copy;
 	}
 

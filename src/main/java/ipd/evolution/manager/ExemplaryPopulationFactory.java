@@ -3,10 +3,8 @@ package ipd.evolution.manager;
 import ipd.model.game.Player;
 import ipd.model.strategy.State;
 import ipd.model.strategy.Strategy;
-import ipd.model.strategy.impl.Cooperation;
 import ipd.model.strategy.impl.Defection;
 import ipd.model.strategy.impl.StrategyImpl;
-import ipd.utils.ProbabilityUtils;
 
 import java.util.List;
 
@@ -29,10 +27,10 @@ public class ExemplaryPopulationFactory {
 	private static Strategy createStrategy(int i) {
 		Strategy strategy = new StrategyImpl();
 		State state = null;
-		if (ProbabilityUtils.simulateProbability(0.5))
-			state = new Defection();
-		else
-			state = new Cooperation();
+		// if (ProbabilityUtils.simulateProbability(0.5))
+		state = new Defection();
+		// else
+		// state = new Cooperation();
 		state.setNextIfCooperation(state);
 		state.setNextIfDefection(state);
 		strategy.addState(state);

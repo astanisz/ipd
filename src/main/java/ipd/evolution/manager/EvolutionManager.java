@@ -10,6 +10,10 @@ import ipd.model.game.Player;
 import ipd.model.strategy.State;
 import ipd.visualization.GraphPlotter;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +29,7 @@ public class EvolutionManager {
 	private static Mutation mutation = new MutationFromPaper();
 	public static double ALFA = 0.2;
 	public static double DELTA = 0.3;
+	private static Player theBestPlayer;
 
 	public static void main(String[] args) {
 
@@ -36,14 +41,25 @@ public class EvolutionManager {
 		setUp(args);
 
 		int iterations = Integer.parseInt(args[2]);
+		// List<String> lines = Lists.newLinkedList();
 		for (int i = 0; i < iterations; i++) {
 			step();
-			// printAveragePayOffSum(i);
+			getTheBestPlayer();
+			// lines.add(printAveragePayOffSum(i));
 			printPercentageOfCooperations();
 		}
+		// saveAveragePayoff(lines);
 		saveTheBestStrategy();
-		// players.forEach(p -> GraphPlotter.plot(p.getStrategy(), players.indexOf(p)));
 
+	}
+
+	private static void saveAveragePayoff(List<String> lines) {
+		Path path = Paths.get("fitness.txt");
+		try {
+			Files.write(path, lines);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void setUp(String[] args) {
@@ -79,17 +95,22 @@ public class EvolutionManager {
 		System.out.println(cooperationSum * 100.0 / statesNumber);
 	}
 
-	private static void printAveragePayOffSum(int i) {
+	private static String printAveragePayOffSum(int i) {
+
 		double sum = players.stream().mapToDouble(p -> p.getPayOff()).sum();
-		System.out.println(i + " " + sum / 200);
+		return i + " " + sum / 200;
 	}
 
 	private static void saveTheBestStrategy() {
-		Player theBestPlayer = players.get(0);
+
+		GraphPlotter.plot(theBestPlayer.getStrategy(), getCurrentDate());
+	}
+
+	private static void getTheBestPlayer() {
+		theBestPlayer = players.get(0);
 		for (Player p : players)
 			if (p.getPayOff() > theBestPlayer.getPayOff())
 				theBestPlayer = p;
-		GraphPlotter.plot(theBestPlayer.getStrategy(), getCurrentDate());
 	}
 
 	private static String getCurrentDate() {
