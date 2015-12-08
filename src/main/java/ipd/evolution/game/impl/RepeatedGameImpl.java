@@ -14,6 +14,8 @@ public class RepeatedGameImpl implements RepeatedGame {
 	public void play(Pair<Player, Player> players) {
 		Player player1 = players.getLeft();
 		Player player2 = players.getRight();
+		player1.setPayoff(0);
+		player2.setPayoff(0);
 		double discountFactor = 1.0; // delta ** i
 
 		do {

@@ -46,8 +46,8 @@ public class EvolutionManager {
 			step();
 			getTheBestPlayer();
 			// lines.add(printAveragePayOffSum(i));
-			printPercentageOfCooperations();
 		}
+		printPercentageOfCooperations();
 		// saveAveragePayoff(lines);
 		saveTheBestStrategy();
 
