@@ -14,10 +14,7 @@ public class GameImpl implements Game {
 	public static final int T = 3;
 	public static final int P = 1;
 
-	// Discount factor
-	private double discountFactor;
-
-	public GameImpl(double discountFactor) { this.discountFactor = discountFactor; }
+	public GameImpl() {}
 
 	public void play(Pair<Player, Player> players, Pair<Action, Action> actions) {
 		Player player1 = players.getLeft();
@@ -32,19 +29,19 @@ public class GameImpl implements Game {
 	private void setPayoffs(Player player1, Player player2, Action action1, Action action2) {
 		if (action1.equals(Action.COOPERATION)) {
 			if (action2.equals(Action.COOPERATION)) {
-				player1.addPayOff(R * discountFactor);
-				player2.addPayOff(R * discountFactor);
+				player1.addPayOff(R);
+				player2.addPayOff(R);
 			} else if (action2.equals(Action.DEFECTION)) {
-				player1.addPayOff(S * discountFactor);
-				player2.addPayOff(T * discountFactor);
+				player1.addPayOff(S);
+				player2.addPayOff(T);
 			}
 		} else {
 			if (action2.equals(Action.COOPERATION)) {
-				player1.addPayOff(T * discountFactor);
-				player2.addPayOff(S * discountFactor);
+				player1.addPayOff(T);
+				player2.addPayOff(S);
 			} else if (action2.equals(Action.DEFECTION)) {
-				player1.addPayOff(P * discountFactor);
-				player2.addPayOff(P * discountFactor);
+				player1.addPayOff(P);
+				player2.addPayOff(P);
 			}
 		}
 	}
